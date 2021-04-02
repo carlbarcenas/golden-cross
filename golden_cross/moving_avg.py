@@ -17,12 +17,12 @@ password = input('Enter your password : ')
 login = r.login('carlbarcenas95@gmail.com', password)
 
 
-def get_moving_average(ticker, range):
+def get_moving_average(ticker, n):
     """
     Obtains the moving average of from stock historical data
     :param ticker: The stock to be analyzed
-    :param range:
-    :return:
+    :param n: The day range of the moving average that is being obtained (ie 50-day moving average)
+    :return: Pandas df containing the list of moving averages
     """
     # Access data and convert to pandas DataFrame
     # Note: pd_history and close_prices has the most recent entry at the end (index of -1)
@@ -34,15 +34,15 @@ def get_moving_average(ticker, range):
     # Calculate moving average based off the range
     i = 0
     moving_average = []
-    while i < len(close_prices) - range + 1:
-        window = close_prices[i: i + range]
-        window_avg = sum(window) / range
+    while i < len(close_prices) - n + 1:
+        window = close_prices[i: i + n]
+        window_avg = sum(window) / n
         moving_average.append(window_avg)
         i += 1
 
-    dict = {'moving_average(' + str(range) + ')': moving_average,
-            'date': dates[range - 1: len(dates)]}
-    return pd.DataFrame(dict)
+    movAvgdf = {'moving_average(' + str(n) + ')': moving_average,
+            'date': dates[n - 1: len(dates)]}
+    return pd.DataFrame(movAvgdf)
 
 
 def merge_data(ticker, n_short, n_long):
@@ -121,18 +121,4 @@ def plot_moving_averages(data):
     plt.show()
 
 
-# TESTING
-# Will use the stocks AAPL and FSLY for testing, as at the time of creation AAPL = no cross, FSLY = golden cross
-# Test 1: Calculating Moving Average for short and long
-fiddy = get_moving_average('FSLY', 50)
-twohunnid = get_moving_average('FSLY', 200)
-print(fiddy)
-print(twohunnid)
 
-# Test 2: Merging the two data sets to one moving_average set.
-df = merge_data('AAPL', 50, 200)
-print(df)
-
-# Test 3: Check if there is a golden cross or not. Plot used for testing.
-check_cross(df)
-plot_moving_averages(df)
