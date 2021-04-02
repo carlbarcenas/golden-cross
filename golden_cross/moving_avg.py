@@ -13,9 +13,12 @@ import matplotlib.pyplot as plt
 
 # Currently using my own Robinhood account.
 # Used to login to a Robinhood account.
-password = input('Enter your password : ')
-login = r.login('carlbarcenas95@gmail.com', password)
+print('===LOGIN TO ROBINHOOD===')
+username = input('Enter your username: ')
+password = input('Enter your password: ')
+login = r.login(username, password)
 
+# TODO: CHANGE iloc pandas commands to loc for better code comprehension
 
 def get_moving_average(ticker, n):
     """
@@ -47,15 +50,11 @@ def get_moving_average(ticker, n):
 
 def merge_data(ticker, n_short, n_long):
     """
-    Creates a singular panda DataFrame of the short and long moving averages.
-
-    Args:
-        ticker(str): Symbol of the stock to be evaluated
-        n_short(int): range of the short range moving average
-        n_long(int): range of the long range moving average
-
-    Returns:
-        Panda DataFrame of the short and long moving averages
+    Creates a singular panda DataFrame of the short and long moving averages
+    :param ticker: Symbol of the stock to be evaluated
+    :param n_short: Range of the short range moving average (in days)
+    :param n_long: Range of the long range moving average (in days)
+    :return: DataFrame of the short and long moving averages
     """
     # Create moving average data sets
     short = get_moving_average(ticker, n_short)
@@ -76,13 +75,9 @@ def merge_data(ticker, n_short, n_long):
 
 def check_cross(data):
     """
-    Args:
-         data(pandas.DataFrame): DataFrame of short and long moving averages
-
-    Returns:
-        1 if the intersection shows a golden cross
-        0 if the intersection shows a death cross
-        -1 if there is no intersection
+    Checks for a golden cross within a dataframe of 2 moving average historicals
+    :param data: Dataframe of the short and long moving averages
+    :return: 1 if golden cross, 0 if death cross, -1 if no intersection
     """
     # Set up data
     short_pts = np.array(data.iloc[:, 0])
