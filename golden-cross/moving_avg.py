@@ -11,20 +11,18 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-# DELETETHIS
+# Currently using my own Robinhood account.
+# Used to login to a Robinhood account.
 password = input('Enter your password : ')
 login = r.login('carlbarcenas95@gmail.com', password)
 
 
 def get_moving_average(ticker, range):
-    """ Calculates the Moving Average of the stock.
-
-    Args:
-        ticker(str): Symbol of the stock to be evaluated
-        range(int): The n-day moving average range
-
-    Returns:
-        Panda DataFrame of the calculated Moving Average
+    """
+    Obtains the moving average of from stock historical data
+    :param ticker: The stock to be analyzed
+    :param range:
+    :return:
     """
     # Access data and convert to pandas DataFrame
     # Note: pd_history and close_prices has the most recent entry at the end (index of -1)
