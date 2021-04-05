@@ -1,6 +1,5 @@
 """
 moving_avg.py
-Author: Carl Barcenas
 Contains functions related to obtaining a stock's moving average, plotting the moving average, and checking for
 cross patterns via stock history.
 """
@@ -30,7 +29,6 @@ def get_moving_average(ticker, n):
     # Note: pd_history and close_prices has the most recent entry at the end (index of -1)
     history = r.get_historicals(ticker, span='year', bounds='regular')  # gets stock historical prices
     pd_history = pd.DataFrame(history)  # transforms data obtained as a dataframe
-    print(pd_history)
     close_prices = pd_history['close_price'].astype(float)  # get close market prices
     dates = pd_history['begins_at']  # gets date of prices
 
