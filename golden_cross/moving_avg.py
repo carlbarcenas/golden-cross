@@ -18,7 +18,6 @@ username = input('Enter your username: ')
 password = input('Enter your password: ')
 login = r.login(username, password)
 
-# TODO: CHANGE iloc pandas commands to loc for better code comprehension
 
 def get_moving_average(ticker, n):
     """
@@ -29,10 +28,11 @@ def get_moving_average(ticker, n):
     """
     # Access data and convert to pandas DataFrame
     # Note: pd_history and close_prices has the most recent entry at the end (index of -1)
-    history = r.get_historicals(ticker, span='year', bounds='regular')
-    pd_history = pd.DataFrame(history)
-    close_prices = pd_history['close_price'].astype(float)
-    dates = pd_history['begins_at']
+    history = r.get_historicals(ticker, span='year', bounds='regular')  # gets stock historical prices
+    pd_history = pd.DataFrame(history)  # transforms data obtained as a dataframe
+    print(pd_history)
+    close_prices = pd_history['close_price'].astype(float)  # get close market prices
+    dates = pd_history['begins_at']  # gets date of prices
 
     # Calculate moving average based off the range
     i = 0
@@ -44,7 +44,7 @@ def get_moving_average(ticker, n):
         i += 1
 
     movAvgdf = {'moving_average(' + str(n) + ')': moving_average,
-            'date': dates[n - 1: len(dates)]}
+                'date': dates[n - 1: len(dates)]}
     return pd.DataFrame(movAvgdf)
 
 
@@ -84,22 +84,35 @@ def check_cross(data):
     long_pts = np.array(data.iloc[:, 1])
 
     # Identify moving average intersections
-    idx = np.argwhere(np.diff(np.sign(short_pts - long_pts))).flatten()
+    i = 1
+    idx = -1
+    # Loop through the 2 arrays looking for an intersection. Idx holds index of intersection
+    while i < len(short_pts):
+        if short_pts[i - 1] < long_pts[i - 1] and short_pts[i] >= long_pts[i]:
+            idx = i
+        elif short_pts[i - 1] > long_pts[i - 1] and short_pts[i] <= long_pts[i]:
+            idx = i
+
+        i += 1
 
     # Identify how long ago the cross was
-    if len(idx) != 0:
-        days_ago = len(data) - idx[-1]
+    if idx != -1:
+        days_ago = len(data) - idx
 
     # Check for intersection and intersection type
-    if idx.size == 0:
+    if idx == -1:
         print("No Cross within the year.")  # NO CROSS
+        return -1
     else:
-        if short_pts[idx[-1] - 1] < long_pts[idx[-1] - 1]:
-            print("Golden Cross " + str(days_ago) + " days ago.")  # GOLDEN CROSS
-        elif short_pts[idx[-1] - 1] > long_pts[idx[-1] - 1]:
-            print("Death Cross " + str(days_ago) + " days ago.")  # DEATH CROSS
+        if short_pts[idx - 1] < long_pts[idx - 1]:
+            print("Golden Cross " + str(days_ago) + " business days ago.")  # GOLDEN CROSS
+            return 1
+        elif short_pts[idx - 1] > long_pts[idx - 1]:
+            print("Death Cross " + str(days_ago) + " business days ago.")  # DEATH CROSS
+            return 0
 
 
+# This function is solely for testing purposes
 def plot_moving_averages(data):
     # Set up plot data
     x_set = range(len(data))
@@ -114,6 +127,3 @@ def plot_moving_averages(data):
     plt.title("Moving Average vs. Time")
     plt.legend(["Short MA Data", "Long MA Data"])
     plt.show()
-
-
-
