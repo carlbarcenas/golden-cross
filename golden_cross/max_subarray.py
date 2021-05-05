@@ -34,8 +34,6 @@ def get_array(ticker):
     close_prices = pd_history['close_price'].astype(float)  # get close market prices
     resized_close_prices = np.array(close_prices[len(close_prices) - 54: len(close_prices)])
 
-    # print(resized_close_prices)
-
     i = 1
     derivative_array = [0] * 53
     while i < len(resized_close_prices):

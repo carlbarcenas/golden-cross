@@ -4,7 +4,9 @@ import golden_cross.max_subarray as ms
 def test1():
     # See if get_array gets the daily stock price change
     # Uncomment the print statement in get_array() to compare stock prices.
-    print(ms.get_array("AAPL"))
+    testArray = ms.get_array("AAPL")
+    print(testArray)
+    print(len(testArray))
 
 def test2():
     # Test get_max_subarray()
@@ -12,4 +14,4 @@ def test2():
     print(ms.find_max_subarray(A, 0, len(A)))
 
 # TEST HERE: choose your tests
-test2()
+test1()
