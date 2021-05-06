@@ -1,5 +1,4 @@
 import golden_cross.moving_avg as g
-import numpy as np
 import time
 
 # TODO: Switch case testing
@@ -16,7 +15,7 @@ def test1():
 
 def test2():
     # Test 2: Merging the two data sets to one moving_average set.
-    df = g.merge_data('AAPL', 50, 200)
+    df = g.merge_data('MGNX', 50, 200)
     print(df)
     # Test 3: Check if there is a golden cross or not. Plot used for testing.
     g.check_cross(df)

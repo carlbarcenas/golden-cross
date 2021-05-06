@@ -75,8 +75,11 @@ def check_cross(data):
     """
     Checks for a golden cross within a dataframe of 2 moving average historicals
     :param data: Dataframe of the short and long moving averages
-    :return: 1 if golden cross, 0 if death cross, -1 if no intersection
+    :return: [1, Days Since Golden Cross] if golden cross
+             [0, Days Since Death Cross] if Death Cross
+             [-1, -1] if no cross at all
     """
+
     # Set up data
     short_pts = np.array(data.iloc[:, 0])
     long_pts = np.array(data.iloc[:, 1])
@@ -98,16 +101,21 @@ def check_cross(data):
         days_ago = len(data) - idx
 
     # Check for intersection and intersection type
+    results = [-1] * 2
     if idx == -1:
         print("No Cross within the year.")  # NO CROSS
-        return -1
+        return results
     else:
         if short_pts[idx - 1] < long_pts[idx - 1]:
             print("Golden Cross " + str(days_ago) + " business days ago.")  # GOLDEN CROSS
-            return 1
+            results[0] = 1
+            results[1] = days_ago
+            return results
         elif short_pts[idx - 1] > long_pts[idx - 1]:
             print("Death Cross " + str(days_ago) + " business days ago.")  # DEATH CROSS
-            return 0
+            results[0] = 1
+            results[1] = days_ago
+            return results
 
 
 # This function is solely for testing purposes

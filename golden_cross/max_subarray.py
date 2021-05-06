@@ -46,40 +46,46 @@ def get_array(ticker):
 def find_max_crossing_subarray(A, low, mid, high):
     leftSum = -math.inf
     sum = 0
+    tempArray = [0] * 3 # Holds low, mid, high
 
-    i = mid
-    while mid >= low:  # Im not sure if its >= or just >
+    for i in range(mid, low-1, -1):  # Im not sure if its >= or just >
         sum = sum + A[i]
         if sum > leftSum:
             leftSum = sum
             maxLeft = i
-        i -= 1
+
 
     rightSum = -math.inf
     sum = 0
-
-    j = mid + 1
-    while j <= high:
-        sum = sum + A[j]
+    for i in range(mid + 1, high + 1):
+        sum = sum + A[i]
         if sum > rightSum:
             rightSum = sum
-            maxRight = j
-        j -= 1
+            maxRight = i
 
-    return (maxLeft, maxRight, leftSum + rightSum)
+    tempArray[0] = maxLeft
+    tempArray[1] = maxRight
+    tempArray[2] = leftSum + rightSum
+
+    return tempArray
 
 
-def find_max_subarray(A, low, high):
+def find_max_subarray(array, low, high):
+    tempArrayBase = [low, high, array[low]]
+    tempArrayLeft = [0] * 3  #Holds leftLow, leftHigh, leftSum in order of index
+    tempArrayRight = [0] * 3  #Holds rightLow, rightHigh, rightSum in order of index
+    tempArrayCross = [0] * 3  #Holds crossLow, crossHigh, crossSum in order of index
+
     if high == low:  # Base case
-        return (low, high, A[low])
+        return tempArrayBase
     else:
-        mid = math.floor((low + high) / 2)
-        (leftLow, leftHigh, leftSum) = find_max_subarray(A, low, mid)
-        (rightLow, rightHigh, rightSum) = find_max_subarray(A, mid + 1, high)
-        (crossLow, crossHigh, crossSum) = find_max_crossing_subarray(A, low, mid, high)
-        if leftSum >= rightSum and leftSum >= crossSum:
-            return (leftLow, leftHigh, leftSum)
-        elif rightSum >= leftSum and rightSum >= crossSum:
-            return (rightLow, rightHigh, rightSum)
+        mid = (low + high) // 2
+        tempArrayLeft = find_max_subarray(array, low, mid)
+        tempArrayRight = find_max_subarray(array, mid + 1, high)
+        tempArrayCross = find_max_crossing_subarray(array, low, mid, high)
+        if tempArrayLeft[2] >= tempArrayRight[2] and tempArrayLeft[2] >= tempArrayCross[2]:
+            return tempArrayLeft
+        elif tempArrayRight[2] >= tempArrayLeft[2] and tempArrayRight[2] >= tempArrayCross[2]:
+            return tempArrayRight
         else:
-            return (crossLow, crossHigh, crossSum)
+            return tempArrayCross
