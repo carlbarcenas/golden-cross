@@ -12,10 +12,10 @@ def cross_vs_maxsubarray(ticker):
     arrayData = ms.get_array(ticker)
     maxSubarrayResults = ms.find_max_subarray(arrayData, 0, len(arrayData) - 1)
 
-    # Get starting index of max subarray
-    msStart = maxSubarrayResults[0]
+    # Get business days since max subarray start
+    msStart = len(arrayData) - maxSubarrayResults[0] - 1
 
-    # Find Golden Cross index
+    # Get business days since the golden cross occurs
     crossData = g.merge_data(ticker, 50, 200)
     crossResults = g.check_cross(crossData)
     if crossResults[0] == 1:
@@ -24,7 +24,10 @@ def cross_vs_maxsubarray(ticker):
         print("No golden cross, thus test not possible")
         return -1
 
-    if abs(crossIndex - msStart) >= 10:
+    print(crossIndex)
+    print(msStart)
+
+    if abs(crossIndex - msStart) <= 10:
         print("Golden Cross aligns with Max Subarray")
         return 1
     else:
